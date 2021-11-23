@@ -4,15 +4,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using System.IO;
 
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public MainManager mainManager;
     public TMP_InputField inputField;
     public string playerName;
+    public string highScore;
     private Text displayName;
     string currentScene;
+    
 
     private void Awake()
     {
@@ -34,6 +38,8 @@ public class GameManager : MonoBehaviour
         // set the playername ui if we are in the game and it has been set
         if (playerName != "" && currentScene == "main")
         {
+            mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
+            highScore = GameObject.Find("MainManager").GetComponent<MainManager>().ScoreText.ToString();
             displayName = GameObject.Find("Canvas/PlayerName").GetComponent<Text>();
             displayName.text = playerName;
         }
@@ -46,4 +52,35 @@ public class GameManager : MonoBehaviour
         playerName = (inputField.text != ""? inputField.text : "Mystery Player");
         SceneManager.LoadScene("main");
     }
+
+[System.Serializable]
+class SaveData
+{
+    public string playerName;
+    public string highScore;
+}
+
+public void SaveScore()
+{
+    SaveData data = new SaveData();
+    data.playerName = playerName;
+    data.highScore = highScore;
+
+    string json = JsonUtility.ToJson(data);
+  
+    File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+}
+
+public void LoadScore()
+{
+    string path = Application.persistentDataPath + "/savefile.json";
+    if (File.Exists(path))
+    {
+        string json = File.ReadAllText(path);
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        playerName = data.playerName;
+        highScore = data.highScore;
+    }
+}
 }
