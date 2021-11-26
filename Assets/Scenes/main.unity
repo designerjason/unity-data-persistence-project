@@ -1299,11 +1299,7 @@ GameObject:
   - component: {fileID: 2078529057}
   - component: {fileID: 2078529056}
   m_Layer: 5
-<<<<<<< HEAD
   m_Name: HighScore
-=======
-  m_Name: BestScore
->>>>>>> 508a15cdb61751699a92a140201cc602bd6b30c0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
